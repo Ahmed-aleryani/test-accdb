@@ -76,13 +76,22 @@ namespace Asaad
 
             else
             {
-                connection.Open();
-                MessageBox.Show("invalid username and password..adding new user to db");
-                OleDbCommand insert = connection.CreateCommand();
-                insert.CommandText =string.Format("INSERT INTO 'users' ({0},{1},{2})", 1,user,pass);
-                insert.ExecuteNonQuery();
 
-                listBox1.Items.Add("User: " + user + " - pass: " + pass);
+                try
+                {
+                    MessageBox.Show("invalid username and password..adding new user to db");
+                    OleDbCommand insert = connection.CreateCommand();
+                    insert.CommandText = "INSERT INTO users (username, [password]) VALUES ( ? , ? )";
+                    connection.Open();
+                    insert.Parameters.AddWithValue("@username", textBox1.Text);
+                    insert.Parameters.AddWithValue("@password", textBox2.Text);
+                    insert.ExecuteNonQuery();
+
+                    listBox1.Items.Add("User: " + user + " - pass: " + pass);
+                }catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
                 connection.Close();
              
             }
